@@ -21,14 +21,23 @@
   <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-    <%- include('partials/_header') %>
+  <%- include('partials/_header') %>
   <div class="card text-center">
     <div class="card-header"></div>
     <div class="card-body">
       <h5 class="card-title">TinyURL for: <%= longURL %></h5>
       <p class="card-text">Short URL: <a href="/u/<%= shortURL %>"><%= shortURL %></a></p>
     </div>
-    <div class="card-footer text-muted"></div>
+    <div class="card-footer text-muted">
+      <h3>EDIT</h3>
+      <form class="justify-content-center form-inline" action="/urls/<%= shortURL %>" method="POST">
+        <div class="form-group mb-2">
+          <label for="longURL">New URL:</label>
+          <input class="form-control" type="url" name="longURL" placeholder="http://" style="width: 300px; margin: 1em">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+    </div>
   </div>
   <!-- Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

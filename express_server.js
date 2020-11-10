@@ -31,9 +31,16 @@ app.get("/urls/:shortURL", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  // const longURL = ...
   res.redirect(urlDatabase[req.params.shortURL]);
 });
+
+app.post("/urls/:id", (req, res) => {
+  console.log(req.params.id, req.body);
+  urlDatabase[req.params.id] = req.body.longURL;
+  // res.redirect(`/urls/${req.params.id}`);
+  res.redirect('/');
+});
+
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();
   // console.log(req.body);
@@ -48,6 +55,13 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   res.redirect(`/`);
 });
 
+app.post("/urls/:shortURL/edit", (req, res) => {
+  // redirect to url_show.ejs
+  console.log(req.params.shortURL);
+  // delete urlDatabase[req.params.shortURL];
+  res.redirect(`/urls/${req.params.shortURL}`);
+});
+  
 app.listen(PORT, () => {
   console.log(`Server Started - TinyApp listening on port ${PORT}!`);
 });
