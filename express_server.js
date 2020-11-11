@@ -132,7 +132,8 @@ app.post('/register', (req, res) => {
     return res.status(400).send('Please enter a valid email/password');
   } else {
     const userInfo = getUserByEmail(users, currEmail);
-    if (userInfo) {
+    if (Object.keys(userInfo).length > 0) {
+    // if (userInfo) {
       // res.clearCookie('userId');
       return res.status(302).send("User/password already exists..login instead!");
     }
