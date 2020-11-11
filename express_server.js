@@ -1,15 +1,14 @@
-const generateRandomString = require('./generateRandomString');
-const express = require("express");
-const app = express();
-const PORT = 8080; // default port 8080
-const bodyParser = require("body-parser");
+const {
+  generateRandomString,
+  app,
+  PORT,
+  bodyParser
+} = require('./constants');
+
+const {urlDatabase} = require('./data');
+
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
-
-const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
-};
 
 app.get("/", (req, res) => {
   const templateVars = { urls: urlDatabase };
@@ -25,7 +24,6 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  // console.log(req.params);
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]};
   res.render("urls_show", templateVars);
 });
@@ -34,31 +32,29 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(urlDatabase[req.params.shortURL]);
 });
 
+//Add
 app.post("/urls/:id", (req, res) => {
   console.log(req.params.id, req.body);
   urlDatabase[req.params.id] = req.body.longURL;
-  // res.redirect(`/urls/${req.params.id}`);
   res.redirect('/');
 });
 
+//Edited data received updated in database
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();
-  // console.log(req.body);
   urlDatabase[shortURL] = req.body.longURL;
-  res.redirect(`/urls/${shortURL}`);
+  // res.redirect(`/urls/${shortURL}`);
+  res.redirect('/');
 });
 
+// Delete
 app.post("/urls/:shortURL/delete", (req, res) => {
-// remove from url database
-  // console.log(req.params.shortURL);
   delete urlDatabase[req.params.shortURL];
   res.redirect(`/`);
 });
 
+// Edit
 app.post("/urls/:shortURL/edit", (req, res) => {
-  // redirect to url_show.ejs
-  console.log(req.params.shortURL);
-  // delete urlDatabase[req.params.shortURL];
   res.redirect(`/urls/${req.params.shortURL}`);
 });
   

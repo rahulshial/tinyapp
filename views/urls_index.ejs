@@ -36,19 +36,19 @@
       <tbody>
         <% for(let url in urls) { %>
         <tr>
-          <td><%= url %></td>
-          <td><%= urls[url] %></td>
+          <td><a href="<%= urls[url] %>"><%= url %></a></td>
+          <td><a href="<%= urls[url] %>"><%= urls[url] %></a></td>
           <td>
             <form action="/urls/<%= url %>/Edit" method="POST">
-              <div class=form-group mb-2">
+              <div class="form-group mb-2">
                 <button type="submit" class="btn btn-primary">Edit</button>
               </div>
             </form>
             </td>
             <td>
             <form action="/urls/<%= url %>/delete" method="POST">
-              <div class=form-group mb-2">
-                <button type="submit" class="btn btn-primary">Delete</button>
+              <div class="form-group mb-2">
+                <button type="submit" class="btn btn-primary btn-danger">Delete</button>
               </div>
             </form>
           </td>
