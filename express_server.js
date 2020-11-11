@@ -85,15 +85,19 @@ app.post("/urls/:shortURL/edit", (req, res) => {
 
 // Login
 app.post('/login', (req, res) => {
-  res.cookie('userId', req.body.userId);
+  const loginId = req.body.userId;
+  res.cookie('userId', loginId);
+
   // Lookup the user object in the users object using the user_id cookie value
-  const userInfo = getUser(users, res.cookie['userId']);
-  if (!userInfo.length > 0) {
+  const userInfo = getUser(users, loginId);
+  console.log(userInfo);
+  if (Object.keys(userInfo).length === 0) {
     res.clearCookie('userId');
-    res.send('User does not exist!');
     res.redirect(`/urls`);
+  } else {
+    res.redirect(`/urls`);
+
   }
-  res.redirect(`/urls`);
 });
 
 // Logout
