@@ -1,10 +1,11 @@
 const {
   generateRandomString,
+  getUser,
+  morgan,
   app,
   PORT,
   bodyParser,
   cookieParser,
-  getUser,
 } = require('./constants');
 
 const {
@@ -15,6 +16,7 @@ const {
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.set("view engine", "ejs");
+app.use(morgan('dev'));
 
 app.get("/", (req, res) => {
   const currUserId = req.cookies['userId'];
@@ -23,7 +25,8 @@ app.get("/", (req, res) => {
     urls: urlDatabase,
     userId: currUserId,
     user: users[currUserId],
-  };  res.render("urls_index", templateVars);
+  };
+  res.render("urls_index", templateVars);
 });
 
 app.get("/urls", (req, res) => {
@@ -34,17 +37,15 @@ app.get("/urls", (req, res) => {
     userId: currUserId,
     user: users[currUserId],
   };
-  // console.log(templateVars.user[newUserid]);
-  // console.log(templateVars.user['email']);
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
   const currUserId = req.cookies['userId'];
-
   const templateVars = {
+    urls: urlDatabase,
     userId: currUserId,
-    users: users[currUserId],
+    user: users[currUserId],
   };
   res.render("urls_new", templateVars);
 });
@@ -65,6 +66,15 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(urlDatabase[req.params.shortURL]);
 });
 
+// Registration
+app.get('/register', (req, res) => {
+  const currUserId = req.cookies['userId'];
+
+  const templateVars = {
+    userId: currUserId,
+  };
+  res.render("registration", templateVars);
+});
 
 //Add
 app.post("/urls/:id", (req, res) => {
@@ -76,8 +86,8 @@ app.post("/urls/:id", (req, res) => {
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();
   urlDatabase[shortURL] = req.body.longURL;
-  // res.redirect(`/urls/${shortURL}`);
-  res.redirect('/');
+  res.redirect(`/urls/${shortURL}`);
+  // res.redirect('/');
 });
 
 // Delete
@@ -103,7 +113,6 @@ app.post('/login', (req, res) => {
     res.redirect(`/urls`);
   } else {
     res.locals.userInfo = userInfo;
-    // console.log(res.locals.userInfo);
     res.redirect(`/urls`);
   }
 });
@@ -115,15 +124,6 @@ app.post('/logout', (req, res) => {
 });
 
 // Registration
-app.get('/register', (req, res) => {
-  const currUserId = req.cookies['userId'];
-
-  const templateVars = {
-    userId: currUserId,
-  };
-  res.render("registration", templateVars);
-});
-
 app.post('/register', (req, res) => {
   const userId = generateRandomString();
   users[userId] = {
