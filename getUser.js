@@ -16,11 +16,10 @@ const getUserByEmail = function(users, email) {
   for (const key of Object.keys(users)) {
     if (users[key]['email'] === email) {
       returnUser = users[key];
-      // return true;
+      return returnUser;
     }
   }
   return returnUser;
-  // return false;
 };
 
 

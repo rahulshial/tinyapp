@@ -78,6 +78,16 @@ app.get('/register', (req, res) => {
   res.render("registration", templateVars);
 });
 
+// Login
+app.get('/login', (req, res) => {
+  const currUserId = req.cookies['userId'];
+
+  const templateVars = {
+    userId: currUserId,
+  };
+  res.render("login", templateVars);
+});
+
 //Add
 app.post("/urls/:id", (req, res) => {
   urlDatabase[req.params.id] = req.body.longURL;
@@ -104,17 +114,19 @@ app.post("/urls/:shortURL/edit", (req, res) => {
 
 // Login
 app.post('/login', (req, res) => {
-  const loginId = req.body.userId;
-  res.cookie('userId', loginId);
-
-  // Lookup the user object in the users object using the user_id cookie value
-  const userInfo = getUserById(users, loginId);
-  if (Object.keys(userInfo).length === 0) {
-    res.clearCookie('userId');
-    return res.status(404).send("No such User!");
+  const currEmail = req.body.email;
+  const currPassword = req.body.password;
+  if (!currEmail || !currPassword) {
+    return res.status(400).send('Please enter a valid email/password');
   } else {
-    res.locals.userInfo = userInfo;
-    res.redirect(`/urls`);
+  // Lookup the user object in the users object using the user_id cookie value
+    const userInfo = getUserByEmail(users, currEmail);
+    if (Object.keys(userInfo).length > 0 && currPassword === userInfo['password']) {
+      res.cookie('userId', userInfo['id']);
+      res.redirect('/urls');
+    } else {
+      return res.status(401).send("User / password combination does not exist");
+    }
   }
 });
 
