@@ -1,6 +1,7 @@
 const {
   generateRandomString,
-  getUser,
+  getUserById,
+  getUserByEmail,
   morgan,
   app,
   PORT,
@@ -73,6 +74,7 @@ app.get('/register', (req, res) => {
   const templateVars = {
     userId: currUserId,
   };
+
   res.render("registration", templateVars);
 });
 
@@ -87,7 +89,6 @@ app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();
   urlDatabase[shortURL] = req.body.longURL;
   res.redirect(`/urls/${shortURL}`);
-  // res.redirect('/');
 });
 
 // Delete
@@ -107,10 +108,10 @@ app.post('/login', (req, res) => {
   res.cookie('userId', loginId);
 
   // Lookup the user object in the users object using the user_id cookie value
-  const userInfo = getUser(users, loginId);
+  const userInfo = getUserById(users, loginId);
   if (Object.keys(userInfo).length === 0) {
     res.clearCookie('userId');
-    res.redirect(`/urls`);
+    return res.status(404).send("No such User!");
   } else {
     res.locals.userInfo = userInfo;
     res.redirect(`/urls`);
@@ -125,6 +126,17 @@ app.post('/logout', (req, res) => {
 
 // Registration
 app.post('/register', (req, res) => {
+  const currEmail = req.body.email;
+  const currPassword = req.body.password;
+  if (!currEmail || !currPassword) {
+    return res.status(400).send('Please enter a valid email/password');
+  } else {
+    const userInfo = getUserByEmail(users, currEmail);
+    if (Object.keys(userInfo).length > 0) {
+      res.clearCookie('userId');
+      return res.status(302).send("User/password already exists..login instead!");
+    }
+  }
   const userId = generateRandomString();
   users[userId] = {
     id: userId,

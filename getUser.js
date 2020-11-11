@@ -1,5 +1,5 @@
 
-const getUser = function(users, userId) {
+const getUserById = function(users, userId) {
   let returnUser = {};
 
   for (const key of Object.keys(users)) {
@@ -10,4 +10,19 @@ const getUser = function(users, userId) {
   return returnUser;
 };
 
-module.exports = getUser;
+const getUserByEmail = function(users, email) {
+  let returnUser = {};
+
+  for (const key of Object.keys(users)) {
+    if (users[key]['email'] === email) {
+      returnUser = (users[key]);
+    }
+  }
+  return returnUser;
+};
+
+
+module.exports = {
+  getUserById,
+  getUserByEmail,
+};

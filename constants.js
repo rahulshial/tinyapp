@@ -1,5 +1,6 @@
 const generateRandomString = require('./generateRandomString');
-const getUser = require('./getUser');
+const { getUserById, getUserByEmail } = require('./getUser');
+// const getUserByEmail = require('./getUser');
 const express = require('express');
 const morgan = require('morgan');
 const app = express();
@@ -9,7 +10,8 @@ const cookieParser = require('cookie-parser');
 
 module.exports = {
   generateRandomString,
-  getUser,
+  getUserById,
+  getUserByEmail,
   morgan,
   app,
   PORT,
