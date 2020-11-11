@@ -1,0 +1,10 @@
+git branch feature/cookies - creates the branch
+git checkout feature/cookies - makes active
+git add . - adds all to feature/cookies
+git commit
+git checkout master
+git commit
+git merge feature/cookies
+git checkout feature/cookies
+git merge master
+git push origin master

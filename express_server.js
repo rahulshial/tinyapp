@@ -6,7 +6,10 @@ const {
   cookieParser,
 } = require('./constants');
 
-const {urlDatabase} = require('./data');
+const {
+  urlDatabase,
+  users,
+} = require('./data');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
@@ -15,7 +18,8 @@ app.set("view engine", "ejs");
 app.get("/", (req, res) => {
   const templateVars = {
     urls: urlDatabase,
-    username: req.cookies['username'],
+    userId: req.cookies['userId'],
+    users: users,
   };
   res.render("urls_index", templateVars);
 });
@@ -23,14 +27,16 @@ app.get("/", (req, res) => {
 app.get("/urls", (req, res) => {
   const templateVars = {
     urls: urlDatabase,
-    username: req.cookies['username'],
+    userId: req.cookies['userId'],
+    users: users,
   };
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
   const templateVars = {
-    username: req.cookies['username'],
+    userId: req.cookies['userId'],
+    users: users,
   };
   res.render("urls_new", templateVars);
 });
@@ -39,7 +45,8 @@ app.get("/urls/:shortURL", (req, res) => {
   const templateVars = {
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL],
-    username: req.cookies['username']
+    userId: req.cookies['userId'],
+    users: users,
   };
   res.render("urls_show", templateVars);
 });
@@ -47,6 +54,7 @@ app.get("/urls/:shortURL", (req, res) => {
 app.get("/u/:shortURL", (req, res) => {
   res.redirect(urlDatabase[req.params.shortURL]);
 });
+
 
 //Add
 app.post("/urls/:id", (req, res) => {
@@ -75,14 +83,35 @@ app.post("/urls/:shortURL/edit", (req, res) => {
 });
   
 app.post('/login', (req, res) => {
-  res.cookie('username', req.body.username);
+  res.cookie('userId', req.body.userId);
+  // Lookup the user object in the users object using the user_id cookie value
   res.redirect(`/urls`);
 });
 
 // Logout
 app.post('/logout', (req, res) => {
-  res.clearCookie('username');
+  res.clearCookie('userId');
   res.redirect(`/urls`);
+});
+
+// Registration
+app.get('/register', (req, res) => {
+  const templateVars = {
+    userId: req.cookies['userId'],
+  };
+  res.render("registration", templateVars);
+});
+
+app.post('/register', (req, res) => {
+  const userId = generateRandomString();
+  users[userId] = {
+    id: userId,
+    email: req.body.email,
+    password: req.body.password
+  };
+  console.log(users);
+  res.cookie('userId', userId);
+  res.redirect('/urls');
 });
 
 app.listen(PORT, () => {
