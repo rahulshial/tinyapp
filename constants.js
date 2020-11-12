@@ -13,6 +13,7 @@ const PORT = 8080; // default port 8080
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
+const cookieSession = require('cookie-session');
 
 
 module.exports = {
@@ -28,4 +29,5 @@ module.exports = {
   bodyParser,
   cookieParser,
   bcrypt,
+  cookieSession,
 };
