@@ -10,12 +10,12 @@ const users = {
   "T3E4F9": {
     id: "T3E4F9",
     email: "user@example.com",
-    password: "purple"
+    password: "$2b$10$3Qb0UlyLf8dElD7Q1/AEIukna2J81aRjyVEkC8HwMPbs82gZRempy"
   },
   "T2R0E7": {
     id: "T2R0E7",
     email: "user2@example.com",
-    password: "funk"
+    password: "$2b$10$cRC/EINIa8bFDxh1huczo.GgAYykrZyRj2Ln08u.LZhkfxdeKlTPS"
   }
 };
 

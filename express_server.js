@@ -1,6 +1,5 @@
 const {
   generateRandomString,
-  getUserById,
   getUserByEmail,
   getUrlsById,
   morgan,
@@ -8,6 +7,7 @@ const {
   PORT,
   bodyParser,
   cookieParser,
+  bcrypt,
 } = require('./constants');
 
 const {
@@ -110,7 +110,7 @@ app.post('/login', (req, res) => {
   } else {
   // Lookup the user object in the users object using the user_id cookie value
     const userInfo = getUserByEmail(users, currEmail);
-    if (Object.keys(userInfo).length > 0 && currPassword === userInfo['password']) {
+    if (Object.keys(userInfo).length > 0 && bcrypt.compareSync(currPassword, userInfo.password)) {
       res.cookie('userId', userInfo['id']);
       res.redirect('/urls');
     } else {
@@ -141,7 +141,7 @@ app.post('/register', (req, res) => {
   users[userId] = {
     id: userId,
     email: req.body.email,
-    password: req.body.password
+    password: bcrypt.hashSync(req.body.password, 10),
   };
   res.cookie('userId', userId);
   res.redirect('/urls');
@@ -180,10 +180,6 @@ app.post("/urls/:shortURL/delete", (req, res) => {
     return res.status(401).send('UNAUTHORIZED ACCESS!!!');
   }
 });
-
-
-
-
 
 app.listen(PORT, () => {
   console.log(`Server Started - TinyApp listening on port ${PORT}!`);

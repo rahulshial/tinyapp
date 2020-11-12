@@ -24,10 +24,10 @@
   <header><%- include('partials/_header') %></header>
   <% if (!userId) { %>
   <br />
-  <h3 style=“display: table; margin: auto”>Please Login/Register to view your urls!</h3>
+  <h3 style="display:table; margin: auto">Please Login/Register to view your urls!</h3>
   <% } else if (userId !== urlUserId) { %>
   <br />
-  <h3 style=“display: table; margin: auto”>Unauthorized Access !!!</h3>
+  <h3 style="display:table; margin: auto">Unauthorized Access !!!</h3>
   <% } else { %>
   <div class="card text-center">
     <div class="card-header"></div>
