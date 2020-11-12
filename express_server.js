@@ -101,41 +101,6 @@ app.get('/login', (req, res) => {
   res.render("login", templateVars);
 });
 
-// EDIT, ADD, DELETE +++++++
-
-//Add
-app.post("/urls/:id", (req, res) => {
-  urlDatabase[req.params.id]['longURL'] = req.body.longURL;
-  res.redirect('/');
-});
-
-//Edited data received updated in database
-app.post("/urls", (req, res) => {
-  const currUserId = req.cookies['userId'];
-  const shortURL = generateRandomString();
-  urlDatabase[shortURL] = {longURL: req.body.longURL, userID: currUserId};
-  res.redirect(`/urls/${shortURL}`);
-});
-
-// Delete
-app.post("/urls/:shortURL/delete", (req, res) => {
-  const currUserId = req.cookies['userId'];
-  const shortURL = req.params.shortURL;
-  const urlUserId = urlDatabase[shortURL]['userID'];
-  // console.log(`CurrUser: ${currUserId} urlUserId: ${urlUserId}`);
-  if (urlUserId === currUserId) {
-    delete urlDatabase[req.params.shortURL];
-    res.redirect(`/`);
-  } else {
-    return res.status(401).send('UNAUTHORIZED ACCESS!!!');
-  }
-});
-
-// Edit
-app.post("/urls/:shortURL/edit", (req, res) => {
-  res.redirect(`/urls/${req.params.shortURL}`);
-});
-
 // Login
 app.post('/login', (req, res) => {
   const currEmail = req.body.email;
@@ -181,6 +146,44 @@ app.post('/register', (req, res) => {
   res.cookie('userId', userId);
   res.redirect('/urls');
 });
+
+// EDIT, ADD, DELETE +++++++
+
+//ADD
+app.post("/urls/:id", (req, res) => {
+  urlDatabase[req.params.id]['longURL'] = req.body.longURL;
+  res.redirect('/');
+});
+
+//EDIT data received updated in database
+app.post("/urls", (req, res) => {
+  const currUserId = req.cookies['userId'];
+  const shortURL = generateRandomString();
+  urlDatabase[shortURL] = {longURL: req.body.longURL, userID: currUserId};
+  res.redirect(`/urls/${shortURL}`);
+});
+
+// Edit
+app.post("/urls/:shortURL/edit", (req, res) => {
+  res.redirect(`/urls/${req.params.shortURL}`);
+});
+
+// DELETE
+app.post("/urls/:shortURL/delete", (req, res) => {
+  const currUserId = req.cookies['userId'];
+  const shortURL = req.params.shortURL;
+  const urlUserId = urlDatabase[shortURL]['userID'];
+  if (urlUserId === currUserId) {
+    delete urlDatabase[req.params.shortURL];
+    res.redirect(`/`);
+  } else {
+    return res.status(401).send('UNAUTHORIZED ACCESS!!!');
+  }
+});
+
+
+
+
 
 app.listen(PORT, () => {
   console.log(`Server Started - TinyApp listening on port ${PORT}!`);
