@@ -40,31 +40,14 @@ const getUrlsById = function(urlDatabase, userId) {
 };
 
 const bcryptPwdHashSync = function(password) {
-  return bcrypt.hashSync(password, 10);
+  const hashedPassword = bcrypt.hashSync(password, 10);
+  return hashedPassword;
 };
 
 const bcryptCmprPwdSync = function(password, hashedPassword) {
-  return bcrypt.compareSync(password, hashedPassword);
+  const compareFlag = bcrypt.compareSync(password, hashedPassword);
+  return compareFlag;
 };
-
-// const users = {
-//   "T3E4F9": {
-//     id: "T3E4F9",
-//     email: "user@example.com",
-//     password: "$2b$10$3Qb0UlyLf8dElD7Q1/AEIukna2J81aRjyVEkC8HwMPbs82gZRempy"
-//   },
-//   "T2R0E7": {
-//     id: "T2R0E7",
-//     email: "user2@example.com",
-//     password: "$2b$10$cRC/EINIa8bFDxh1huczo.GgAYykrZyRj2Ln08u.LZhkfxdeKlTPS"
-//   }
-// };
-
-
-// console.log(bcryptPwdHashSync('purple'));
-// console.log(bcryptPwdHashSync('funk'));
-
-// console.log(bcryptCmprPwdSync('purple', users['T3E4F9']['password']));
 
 module.exports = {
   getUserById,
