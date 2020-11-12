@@ -44,28 +44,36 @@ app.get("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   const currUserId = req.cookies['userId'];
-  const templateVars = {
-    urls: urlDatabase,
-    userId: currUserId,
-    user: users[currUserId],
-  };
-  res.render("urls_new", templateVars);
+  if (!currUserId) {
+    res.redirect("/login");
+  } else {
+    const templateVars = {
+      urls: urlDatabase,
+      userId: currUserId,
+      user: users[currUserId],
+    };
+    res.render("urls_new", templateVars);
+  
+  }
 });
 
 app.get("/urls/:shortURL", (req, res) => {
   const currUserId = req.cookies['userId'];
-
-  const templateVars = {
-    shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL],
-    userId: currUserId,
-    user: users[currUserId],
-  };
-  res.render("urls_show", templateVars);
+  if (!currUserId) {
+    res.redirect("/login");
+  } else {
+    const templateVars = {
+      shortURL: req.params.shortURL,
+      longURL: urlDatabase[req.params.shortURL]['longURL'],
+      userId: currUserId,
+      user: users[currUserId],
+    };
+    res.render("urls_show", templateVars);
+  }
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  res.redirect(urlDatabase[req.params.shortURL]);
+  res.redirect(urlDatabase[req.params.shortURL]['longURL']);
 });
 
 // Registration
@@ -89,16 +97,19 @@ app.get('/login', (req, res) => {
   res.render("login", templateVars);
 });
 
+// EDIT, ADD, DELETE +++++++
+
 //Add
 app.post("/urls/:id", (req, res) => {
-  urlDatabase[req.params.id] = req.body.longURL;
+  urlDatabase[req.params.id]['longURL'] = req.body.longURL;
   res.redirect('/');
 });
 
 //Edited data received updated in database
 app.post("/urls", (req, res) => {
+  const currUserId = req.cookies['userId'];
   const shortURL = generateRandomString();
-  urlDatabase[shortURL] = req.body.longURL;
+  urlDatabase[shortURL] = {longURL: req.body.longURL, userID: currUserId};
   res.redirect(`/urls/${shortURL}`);
 });
 
