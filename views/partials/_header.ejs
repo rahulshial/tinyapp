@@ -9,12 +9,17 @@
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
+      </div>
+    </div>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
         <% if(!userId) { %>
         <a class="nav-item nav-link" href="/login">Login</a>
         <a class="nav-item nav-link" href="/register">Register</a>
         <% } %>
       </div>
     </div>
+
     <% if(userId) { %>
     <h4 style="margin-right: 15px;">Hello <%= user['email'] %>! </h4>
     <form class="form-inline" action="/logout" method="POST">

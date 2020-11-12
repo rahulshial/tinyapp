@@ -125,7 +125,7 @@ app.post('/login', (req, res) => {
       res.cookie('userId', userInfo['id']);
       res.redirect('/urls');
     } else {
-      return res.status(401).send("User / password combination does not exist");
+      return res.status(403).send("User / password combination does not exist");
     }
   }
 });
