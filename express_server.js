@@ -124,11 +124,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   const urlUserId = urlDatabase[shortURL]['userID'];
   // console.log(`CurrUser: ${currUserId} urlUserId: ${urlUserId}`);
   if (urlUserId === currUserId) {
-    // console.log('Deleting...');
     delete urlDatabase[req.params.shortURL];
-    // console.log(urlDatabase);
-  } else {
-    // console.log('not deleted');
   }
   res.redirect(`/`);
 });
@@ -171,8 +167,6 @@ app.post('/register', (req, res) => {
   } else {
     const userInfo = getUserByEmail(users, currEmail);
     if (Object.keys(userInfo).length > 0) {
-    // if (userInfo) {
-      // res.clearCookie('userId');
       return res.status(302).send("User/password already exists..login instead!");
     }
   }
