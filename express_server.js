@@ -21,21 +21,11 @@ app.set("view engine", "ejs");
 app.use(morgan('dev'));
 
 app.get("/", (req, res) => {
-  const currUserId = req.cookies['userId'];
-
-  const templateVars = {
-    urls: urlDatabase,
-    userId: currUserId,
-    user: users[currUserId],
-  };
-
-  res.render("urls_index", templateVars);
+  res.redirect("/urls");
 });
 
 app.get("/urls", (req, res) => {
-  // console.log('in URLS', req.cookies['userId']);
   const currUserId = req.cookies['userId'];
-  // console.log(urlDatabase);
   if (currUserId) {
     const usersURLs = getUrlsById(urlDatabase, currUserId);
     const templateVars = {
@@ -45,14 +35,13 @@ app.get("/urls", (req, res) => {
     };
     res.render("urls_index", templateVars);
   } else {
-    // const templateVars = {
-    //   urls,
-    //   userId,
-    //   user,
-    // };
-    res.render("urls_index");
+    const templateVars = {
+      urls: {},
+      userId: '',
+      user: '',
+    };
+    res.render("urls_index", templateVars);
   }
-  // res.render("urls_index");
 });
 
 app.get("/urls/new", (req, res) => {
@@ -73,7 +62,6 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls/:shortURL", (req, res) => {
   const currUserId = req.cookies['userId'];
   const shortURL = req.params.shortURL;
-  console.log(currUserId, shortURL);
   if (!currUserId) {
     res.redirect("/urls");
   } else {
@@ -84,7 +72,6 @@ app.get("/urls/:shortURL", (req, res) => {
       urlUserId: urlDatabase[shortURL]['userID'],
       user: users[currUserId],
     };
-    console.log(templateVars.userId, templateVars.urlUserId);
     res.render("urls_show", templateVars);
   }
 });
@@ -132,7 +119,17 @@ app.post("/urls", (req, res) => {
 
 // Delete
 app.post("/urls/:shortURL/delete", (req, res) => {
-  delete urlDatabase[req.params.shortURL];
+  const currUserId = req.cookies['userId'];
+  const shortURL = req.params.shortURL;
+  const urlUserId = urlDatabase[shortURL]['userID'];
+  // console.log(`CurrUser: ${currUserId} urlUserId: ${urlUserId}`);
+  if (urlUserId === currUserId) {
+    // console.log('Deleting...');
+    delete urlDatabase[req.params.shortURL];
+    // console.log(urlDatabase);
+  } else {
+    // console.log('not deleted');
+  }
   res.redirect(`/`);
 });
 
