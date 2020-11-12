@@ -22,8 +22,22 @@ const getUserByEmail = function(users, email) {
   return returnUser;
 };
 
+const getUrlsById = function(urlDatabase, userId) {
+  let returnObject = {};
+
+  for (let url in urlDatabase) {
+    if (urlDatabase[url]['userID'] === userId) {
+      returnObject[url] = {
+        longURL: urlDatabase[url]['longURL'],
+        userID: urlDatabase[url]['userID']
+      };
+    }
+  }
+  return returnObject;
+};
 
 module.exports = {
   getUserById,
   getUserByEmail,
+  getUrlsById,
 };

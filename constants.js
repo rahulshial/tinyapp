@@ -1,5 +1,5 @@
 const generateRandomString = require('./generateRandomString');
-const { getUserById, getUserByEmail } = require('./getUser');
+const { getUserById, getUserByEmail, getUrlsById } = require('./helperFunctions');
 // const getUserByEmail = require('./getUser');
 const express = require('express');
 const morgan = require('morgan');
@@ -12,6 +12,7 @@ module.exports = {
   generateRandomString,
   getUserById,
   getUserByEmail,
+  getUrlsById,
   morgan,
   app,
   PORT,

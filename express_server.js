@@ -2,6 +2,7 @@ const {
   generateRandomString,
   getUserById,
   getUserByEmail,
+  getUrlsById,
   morgan,
   app,
   PORT,
@@ -32,14 +33,26 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
+  // console.log('in URLS', req.cookies['userId']);
   const currUserId = req.cookies['userId'];
-
-  const templateVars = {
-    urls: urlDatabase,
-    userId: currUserId,
-    user: users[currUserId],
-  };
-  res.render("urls_index", templateVars);
+  // console.log(urlDatabase);
+  if (currUserId) {
+    const usersURLs = getUrlsById(urlDatabase, currUserId);
+    const templateVars = {
+      urls: usersURLs,
+      userId: currUserId,
+      user: users[currUserId],
+    };
+    res.render("urls_index", templateVars);
+  } else {
+    // const templateVars = {
+    //   urls,
+    //   userId,
+    //   user,
+    // };
+    res.render("urls_index");
+  }
+  // res.render("urls_index");
 });
 
 app.get("/urls/new", (req, res) => {
@@ -59,15 +72,19 @@ app.get("/urls/new", (req, res) => {
 
 app.get("/urls/:shortURL", (req, res) => {
   const currUserId = req.cookies['userId'];
+  const shortURL = req.params.shortURL;
+  console.log(currUserId, shortURL);
   if (!currUserId) {
-    res.redirect("/login");
+    res.redirect("/urls");
   } else {
     const templateVars = {
-      shortURL: req.params.shortURL,
-      longURL: urlDatabase[req.params.shortURL]['longURL'],
+      shortURL,
+      longURL: urlDatabase[shortURL]['longURL'],
       userId: currUserId,
+      urlUserId: urlDatabase[shortURL]['userID'],
       user: users[currUserId],
     };
+    console.log(templateVars.userId, templateVars.urlUserId);
     res.render("urls_show", templateVars);
   }
 });
@@ -145,7 +162,7 @@ app.post('/login', (req, res) => {
 // Logout
 app.post('/logout', (req, res) => {
   res.clearCookie('userId');
-  res.redirect(`/urls`);
+  res.redirect('/urls');
 });
 
 // Registration
