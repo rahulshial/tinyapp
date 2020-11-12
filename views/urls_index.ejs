@@ -41,7 +41,6 @@
         <tr>
           <td><a href="<%= urls[url]['longURL'] %>"><%= url %></a></td>
           <td><a href="<%= urls[url]['longURL'] %>"><%= urls[url]['longURL'] %></a></td>
-          <% if (urls[url]['userID'] === userId) { %>
           <td>
             <form action="/urls/<%= url %>/Edit" method="POST">
               <div class="form-group mb-2">
@@ -56,22 +55,6 @@
               </div>
             </form>
           </td>
-          <% } else { %>
-          <td>
-            <form>
-              <div class="form-group mb-2">
-                <button type="button" class="btn btn-outline-light"></button>
-              </div>
-            </form>
-          </td>
-          <td>
-            <form>
-              <div class="form-group mb-2">
-                <button type="button" class="btn btn-outline-light"></button>
-              </div>
-            </form>
-          </td>
-          <% } %>
         </tr>
         <% } %>
       </tbody>

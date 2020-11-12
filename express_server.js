@@ -125,8 +125,10 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   // console.log(`CurrUser: ${currUserId} urlUserId: ${urlUserId}`);
   if (urlUserId === currUserId) {
     delete urlDatabase[req.params.shortURL];
+    res.redirect(`/`);
+  } else {
+    return res.status(401).send('UNAUTHORIZED ACCESS!!!');
   }
-  res.redirect(`/`);
 });
 
 // Edit
