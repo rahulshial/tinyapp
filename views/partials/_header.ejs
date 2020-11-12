@@ -19,12 +19,11 @@
         <% } %>
       </div>
     </div>
-
     <% if(userId) { %>
-    <h4 style="margin-right: 15px;">Hello <%= user['email'] %>! </h4>
+    <h5 style="margin-right: 15px;">Logged in as: <%= user['email'] %>! </h5>
     <form class="form-inline" action="/logout" method="POST">
       <div class="form-group mb-2">
-        <button type="submit" class="btn btn-primary">Logout</button>
+        <button type="submit" class="btn btn-outline-dark">Logout</button>
       </div>
     </form>
     <% } %>

@@ -27,6 +27,7 @@ app.get("/", (req, res) => {
     userId: currUserId,
     user: users[currUserId],
   };
+
   res.render("urls_index", templateVars);
 });
 
@@ -58,7 +59,7 @@ app.get("/urls/:shortURL", (req, res) => {
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL],
     userId: currUserId,
-    users: users[currUserId],
+    user: users[currUserId],
   };
   res.render("urls_show", templateVars);
 });
