@@ -78,7 +78,7 @@ app.get("/urls/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
   if (!currUserId) {
     res.redirect("/urls");
-  } else {
+  } else if (urlDatabase[shortURL]) {
     const templateVars = {
       shortURL,
       longURL: urlDatabase[shortURL]['longURL'],
@@ -88,6 +88,8 @@ app.get("/urls/:shortURL", (req, res) => {
       email: users[currUserId]['email'],
     };
     res.render("urls_show", templateVars);
+  } else {
+    res.status(404).send('Resource not found...Please check your input!');
   }
 });
 
