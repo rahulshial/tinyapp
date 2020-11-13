@@ -1,7 +1,3 @@
-const {
-  bcrypt,
-} = require('./constants');
-
 /**
  * Random String Generator - used for creating ShortURL and userId.
  */
@@ -13,20 +9,6 @@ const generateRandomString = function() {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
-};
-
-/**
- * Get user by is Id. Deprecated function and not being used currently. Maintained for future use.
-*/
-const getUserById = function(users, userId) {
-  let returnUser = {};
-
-  for (const key of Object.keys(users)) {
-    if (key === userId) {
-      returnUser = (users[key]);
-    }
-  }
-  return returnUser;
 };
 
 /**
@@ -61,28 +43,9 @@ const getUrlsById = function(urlDatabase, userId) {
   return returnObject;
 };
 
-/**
- * Modular function to encrypt passwords. Currently not in use, due to issues in testing it out. Maintained for future use.
- */
-const bcryptPwdHashSync = function(password) {
-  const hashedPassword = bcrypt.hashSync(password, 10);
-  return hashedPassword;
-};
-
-/**
- * Modular function to compare encrypted passwords. Currently not in use, due to issues in testing it out. Maintained for future use.
- */
-
-const bcryptCmprPwdSync = function(password, hashedPassword) {
-  const compareFlag = bcrypt.compareSync(password, hashedPassword);
-  return compareFlag;
-};
 
 module.exports = {
   generateRandomString,
-  getUserById,
   getUserByEmail,
   getUrlsById,
-  bcryptPwdHashSync,
-  bcryptCmprPwdSync,
 };
