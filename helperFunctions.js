@@ -15,7 +15,7 @@ const generateRandomString = function() {
   return result;
 };
 
-/** 
+/**
  * Get user by is Id. Deprecated function and not being used currently. Maintained for future use.
 */
 const getUserById = function(users, userId) {
@@ -29,7 +29,7 @@ const getUserById = function(users, userId) {
   return returnUser;
 };
 
-/** 
+/**
  * Get User by Email. Search the user by his email address and send back the user object.
 */
 const getUserByEmail = function(users, email) {
