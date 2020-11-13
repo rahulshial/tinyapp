@@ -82,12 +82,17 @@ app.get("/urls/:shortURL", (req, res) => {
       longURL: urlDatabase[shortURL]['longURL'],
       userId: currUserId,
       urlUserId: urlDatabase[shortURL]['userID'],
-      // user: users[currUserId],
       email: users[currUserId]['email'],
     };
     res.render("urls_show", templateVars);
   } else {
-    res.status(404).send('Resource not found...Please check your input!');
+    const errorMessage = {
+      userId: currUserId,
+      email: users[currUserId]['email'],
+      statusCode: 404,
+      errorMsg: "Resource not found...Please check your input!"
+    };
+    res.status(404).render("error-page", errorMessage);
   }
 });
 
@@ -95,10 +100,17 @@ app.get("/urls/:shortURL", (req, res) => {
  * whether logged in or not, if you know the shortURL, you can use the /u/:shortURL mode to directly execute the path to the longURL and visit the destination website.
  */
 app.get("/u/:shortURL", (req, res) => {
+  const currUserId = req.session.userId;
   if (urlDatabase[req.params.shortURL]) {
     res.redirect(urlDatabase[req.params.shortURL]['longURL']);
   } else {
-    res.status(404).send('Resource not found...Please check your input!');
+    const errorMessage = {
+      userId: currUserId,
+      email: '',
+      statusCode: 404,
+      errorMsg: "Resource not found...Please check your input!"
+    };
+    res.status(404).render("error-page", errorMessage);
   }
 });
 
@@ -133,14 +145,26 @@ app.post('/login', (req, res) => {
   const currEmail = req.body.email;
   const currPassword = req.body.password;
   if (!currEmail || !currPassword) {
-    return res.status(400).send('Please enter a valid email/password');
+    const errorMessage = {
+      userId: '',
+      email: '',
+      statusCode: 400,
+      errorMsg: 'Please enter a valid email/password.'
+    };
+    return res.status(400).render("error-page", errorMessage);
   } else {
     const userInfo = getUserByEmail(users, currEmail);
     if (Object.keys(userInfo).length > 0 && bcrypt.compareSync(currPassword, userInfo.password)) {
       req.session.userId = userInfo['id'];
       res.redirect('/urls');
     } else {
-      return res.status(403).send("User / password combination does not exist");
+      const errorMessage = {
+        userId: '',
+        email: '',
+        statusCode: 403,
+        errorMsg: 'User / password combination does not exist.'
+      };
+      return res.status(403).render("error-page", errorMessage);
     }
   }
 });
@@ -160,11 +184,23 @@ app.post('/register', (req, res) => {
   const currEmail = req.body.email;
   const currPassword = req.body.password;
   if (!currEmail || !currPassword) {
-    return res.status(400).send('Please enter a valid email/password');
+    const errorMessage = {
+      userId: '',
+      email: '',
+      statusCode: 400,
+      errorMsg: 'Please enter a valid email/password.'
+    };
+    return res.status(400).render("error-page", errorMessage);
   } else {
     const userInfo = getUserByEmail(users, currEmail);
     if (Object.keys(userInfo).length > 0) {
-      return res.status(302).send("User/password already exists..login instead!");
+      const errorMessage = {
+        userId: '',
+        email: '',
+        statusCode: 400,
+        errorMsg: 'User/password already exists..login instead!'
+      };
+      return res.status(400).render("error-page", errorMessage);
     }
   }
   const userId = generateRandomString();
@@ -192,14 +228,19 @@ app.post("/urls/:id", (req, res) => {
  * when the user adds a new URL, the data is appended in the users URL database. A random id is generated for each new entry
  */
 app.post("/urls", (req, res) => {
-
   const currUserId = req.session.userId;
   if (currUserId) {
     const shortURL = generateRandomString();
     urlDatabase[shortURL] = {longURL: req.body.longURL, userID: currUserId};
     res.redirect(`/urls/${shortURL}`);
   } else {
-    res.status(401).send('UNAUTHORIZED ACCESS!!!');
+    const errorMessage = {
+      userId: currUserId,
+      email: '',
+      statusCode: 401,
+      errorMsg: 'UNAUTHORIZED ACCESS!!!'
+    };
+    return res.status(401).render("error-page", errorMessage);
   }
 });
 
@@ -221,7 +262,13 @@ app.post("/urls/:shortURL/delete", (req, res) => {
     delete urlDatabase[req.params.shortURL];
     res.redirect(`/`);
   } else {
-    return res.status(401).send('UNAUTHORIZED ACCESS!!!');
+    const errorMessage = {
+      userId: currUserId,
+      email: users[currUserId]['email'],
+      statusCode: 401,
+      errorMsg: 'UNAUTHORIZED ACCESS!!!'
+    };
+    return res.status(401).render("error-page", errorMessage);
   }
 });
 
