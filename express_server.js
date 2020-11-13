@@ -2,7 +2,6 @@ const {
   generateRandomString,
   getUserByEmail,
   getUrlsById,
-  morgan,
   app,
   PORT,
   bodyParser,
@@ -17,7 +16,6 @@ const {
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
-app.use(morgan('dev'));
 app.use(cookieSession({
   name: 'session',
   keys: ['onekey']
