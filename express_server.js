@@ -95,7 +95,11 @@ app.get("/urls/:shortURL", (req, res) => {
  * whether logged in or not, if you know the shortURL, you can use the /u/:shortURL mode to directly execute the path to the longURL and visit the destination website.
  */
 app.get("/u/:shortURL", (req, res) => {
-  res.redirect(urlDatabase[req.params.shortURL]['longURL']);
+  if (urlDatabase[req.params.shortURL]) {
+    res.redirect(urlDatabase[req.params.shortURL]['longURL']);
+  } else {
+    res.status(404).send('Resource not found...Please check your input!');
+  }
 });
 
 /**
@@ -188,10 +192,15 @@ app.post("/urls/:id", (req, res) => {
  * when the user adds a new URL, the data is appended in the users URL database. A random id is generated for each new entry
  */
 app.post("/urls", (req, res) => {
+
   const currUserId = req.session.userId;
-  const shortURL = generateRandomString();
-  urlDatabase[shortURL] = {longURL: req.body.longURL, userID: currUserId};
-  res.redirect(`/urls/${shortURL}`);
+  if (currUserId) {
+    const shortURL = generateRandomString();
+    urlDatabase[shortURL] = {longURL: req.body.longURL, userID: currUserId};
+    res.redirect(`/urls/${shortURL}`);
+  } else {
+    res.status(401).send('UNAUTHORIZED ACCESS!!!');
+  }
 });
 
 /**
