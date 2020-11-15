@@ -7,6 +7,7 @@ const {
   bodyParser,
   bcrypt,
   cookieSession,
+  methodOverride,
 } = require('./constants');
 
 const {
@@ -20,6 +21,7 @@ app.use(cookieSession({
   name: 'session',
   keys: ['onekey']
 }));
+app.use(methodOverride('_method'));
 
 // If started at root, it redirects to /urls page
 app.get("/", (req, res) => {
@@ -254,7 +256,25 @@ app.post("/urls/:shortURL/edit", (req, res) => {
 /**
  * Registered Users can delete their own URL entries. But not anyone elses.
  */
-app.post("/urls/:shortURL/delete", (req, res) => {
+// app.post("/urls/:shortURL/delete", (req, res) => {
+//   const currUserId = req.session.userId;
+//   const shortURL = req.params.shortURL;
+//   const urlUserId = urlDatabase[shortURL]['userID'];
+//   if (urlUserId === currUserId) {
+//     delete urlDatabase[req.params.shortURL];
+//     res.redirect(`/`);
+//   } else {
+//     const errorMessage = {
+//       userId: currUserId,
+//       email: users[currUserId]['email'],
+//       statusCode: 401,
+//       errorMsg: 'UNAUTHORIZED ACCESS!!!'
+//     };
+//     return res.status(401).render("error-page", errorMessage);
+//   }
+// });
+
+app.delete("/urls/:shortURL", (req, res) => {
   const currUserId = req.session.userId;
   const shortURL = req.params.shortURL;
   const urlUserId = urlDatabase[shortURL]['userID'];
@@ -271,6 +291,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
     return res.status(401).render("error-page", errorMessage);
   }
 });
+
 
 app.listen(PORT, () => {
   console.log(`Server Started - TinyApp listening on port ${PORT}!`);

@@ -9,6 +9,7 @@ const PORT = 8080; // default port 8080
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
+const methodOverride = require('method-override')
 
 
 module.exports = {
@@ -20,4 +21,5 @@ module.exports = {
   bodyParser,
   bcrypt,
   cookieSession,
+  methodOverride,
 };
