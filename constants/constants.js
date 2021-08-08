@@ -2,7 +2,7 @@ const {
   generateRandomString,
   getUserByEmail,
   getUrlsById,
-} = require('./helperFunctions');
+} = require('../helpers/helperFunctions');
 const express = require('express');
 const app = express();
 const PORT = 8080; // default port 8080

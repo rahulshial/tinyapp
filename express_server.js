@@ -8,12 +8,12 @@ const {
   bcrypt,
   cookieSession,
   methodOverride,
-} = require('./constants');
+} = require('./constants/constants');
 
 const {
   urlDatabase,
   users,
-} = require('./data');
+} = require('./database/data');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
@@ -51,6 +51,14 @@ app.get("/urls", (req, res) => {
     };
     res.render("urls_index", templateVars);
   }
+});
+
+app.get("/urls.DB", (req, res) => {
+  res.json(urlDatabase);
+});
+
+app.get("/urls.USERS", (req, res) => {
+  res.json(users);
 });
 
 /**
