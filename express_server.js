@@ -53,11 +53,11 @@ app.get("/urls", (req, res) => {
   }
 });
 
-app.get("/urls.DB", (req, res) => {
+app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
-app.get("/urls.USERS", (req, res) => {
+app.get("/users.json", (req, res) => {
   res.json(users);
 });
 
